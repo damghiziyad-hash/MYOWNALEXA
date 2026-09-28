@@ -1,36 +1,17 @@
-import speech_recognition as sr
-import pyttsx3
-
-
-def speak(text):
-    engine = pyttsx3.init()
-    engine.say(text)
-    engine.runAndWait()
-
-def listen():
-    """listens to microphone and returns text"""
-    recognizer = sr.Recognizer()
-    with sr.Microphone() as source:
-        print("Listening...")
-        recognizer.adjust_for_ambient_noise(source)
-        audio = recognizer.listen(source)
-
-        try:
-            command = recognizer.recognize_google(audio)
-            return command.lower()
-        except sr.UnknownValueError:
-            print(f"The audio has not been recognized")
-            return
-        except sr.RequestError:
-            print("check your internet connection")
-            return
-
+from voice import speak, listen
+from brain import ask
 
 def process_command(command):
-    print("this will be replaced soon")
-    
+    if "stop" in command or "exit" in command:
+        speak("Shutting down.")
+        return False
+    else:
+        answer = ask(command)
+        speak(answer)
+        return True
+        
 def main():
-    speak("startedl.")
+    speak("started.")
     running = True
 
     while running:
@@ -42,4 +23,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
